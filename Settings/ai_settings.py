@@ -1,4 +1,4 @@
-from Settings.game_setting import X, O, EMPTY
+from Settings.game_settings import X, O, EMPTY
 
 # Alpha-Beta pruning setting
 MAX_TREE_DEPTH_LEVEL = 2
@@ -44,7 +44,7 @@ X_6_PATTERNS = [
     [EMPTY, X, EMPTY, EMPTY, EMPTY, EMPTY],
 ]
 
-X_6_PATTERNS_SCRES =[
+X_6_PATTERNS_SCORES =[
     SCORE_4_UNBLOCKED_PIECES, 
 
     SCORE_3_UNBLOCKED_PIECES, 
@@ -129,7 +129,7 @@ O_6_PATTERNS = [
     [EMPTY, O, EMPTY, EMPTY, EMPTY, EMPTY],
 ]
 
-O_6_PATTERNS_SCRES =[
+O_6_PATTERNS_SCORES =[
     SCORE_4_UNBLOCKED_PIECES, 
 
     SCORE_3_UNBLOCKED_PIECES, 
