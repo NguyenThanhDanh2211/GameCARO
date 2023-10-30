@@ -205,23 +205,6 @@ class GameRender:
             is_in_y_button_area = render_settings.HOME_BUTTON_POS_Y_MIN < mouse_y_position < render_settings.HOME_BUTTON_POS_Y_MAX
             return is_in_x_button_area and is_in_y_button_area
         return False 
-                           
-    
-    # def draw_button(self, pos, width, height, text):
-    #     """
-    #     It draws a button on the screen with the given text, width, height, and position.
-        
-    #     :param pos: (x, y)
-    #     :param width: width of the button
-    #     :param height: the height of the button
-    #     :param text: The text that will be displayed on the button
-    #     """
-    #     rectButton = pygame.Rect(pos, (width, height))
-    #     font_text = pygame.font.Font(pygame.font.get_default_font(), 35)
-    #     text_surf = font_text.render(text, True, render_settings.COLOR_BLUE_VIOLET)
-    #     text_rect = text_surf.get_rect(center = rectButton.center)
-    #     pygame.draw.rect(self.screen, render_settings.COLOR_BLACK, rectButton)
-    #     self.screen.blit(text_surf, text_rect)
 
     def draw_board(self, board_state, info_text, info_text_color, last_move, last_move_color, current_round, human_score, com_score):
         """
@@ -247,7 +230,6 @@ class GameRender:
 
         self.draw_scores(human_score, com_score)
         self.draw_turn_counter(current_round)
-        # self.draw_button(render_settings.NEW_GAME_BUTTON_POS, 150, 40, "New game")
         newgame = Button(screen=self.screen, pos=(700, 490), text_input='New game', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(150, 40))
         newgame.update()
         home = Button(screen=self.screen, pos=(700, 540), text_input='Home', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(150, 40))
@@ -314,7 +296,6 @@ class GameRender:
             is_selected_square_empty = state.board[square_x_position][square_y_position] == game_settings.EMPTY
             return is_selected_square_empty
         else:
-            print('Vượt qua giới hạn gòi má')
             return False
 
     def is_mouse_position_in_board_area(self, mouse_position):
@@ -355,8 +336,6 @@ class GameRender:
 
         self.screen.blit(bg, (0, 0))
         self.screen.blit(blur_surface, (0, 0))
-        # pygame.display.update()
-        # self.screen.fill(render_settings.BOARD_COLOR) => đây
         pygame.display.update()
 
     def handle_human_move(self, state: State):
