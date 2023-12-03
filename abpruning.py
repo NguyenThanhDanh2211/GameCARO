@@ -4,6 +4,7 @@ from state import State
 import Settings.game_settings as game_settings
 import Settings.ai_settings as ai_settings
 from minimaxnode import MinimaxNode
+import numpy as np
 
 class ABPruning:
     def __init__(self, __state: State) -> None:
@@ -18,8 +19,7 @@ class ABPruning:
         :return: The next move to be played.
         """
         # =======================================
-        # FIRST MOVE AND SECOND MOVE
-        if(self.state.board == game_settings.EMPTY_BOARD or len(self.state.moves) <= 3):
+        if(np.array_equal(self.state.board, game_settings.EMPTY_BOARD) or len(self.state.moves) <= 3):
             
             # Announcement
             print("AI used random move.")
@@ -147,7 +147,9 @@ class ABPruning:
         :return: A tuple of two integers.
         """
         # AI move first
-        if(state.board == game_settings.EMPTY_BOARD):
+        # if(state.board == game_settings.EMPTY_BOARD):
+        if np.array_equal(state.board, game_settings.EMPTY_BOARD):
+
             return(int(game_settings.BOARD_ROW_COUNT / 2), int(game_settings.BOARD_COL_COUNT / 2))
         # HUMAN move first
         possible_moves = State.generate_possible_moves(state.board, expansion_range)

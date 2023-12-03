@@ -3,7 +3,6 @@ import sys
 
 import GUI.game_render as game_render
 import Settings.render_settings as render_settings
-from GUI.menu_render import Menu
 
 class Aboutme:
     def __init__(self) -> None:

@@ -1,5 +1,7 @@
 from copy import deepcopy
 from math import inf as infinity
+import numpy as np
+
 
 import Settings.ai_settings as ai_settings
 import Settings.game_settings as game_settings
@@ -20,7 +22,7 @@ class State:
         """
         r, c = move_position
         self.moves.append(move_position)
-        self.board[r][c] =last_turn
+        self.board[r][c] = last_turn
 
         if(last_turn == game_settings.COM):
             self.current_turn = game_settings.HUMAN
@@ -109,7 +111,7 @@ class State:
         board: trạng thái hiện tại của bàn cờ
         """
         possible_moves = []
-        if(board == game_settings.EMPTY_BOARD):
+        if np.array_equal(board, game_settings.EMPTY_BOARD):
             for r in range(0, game_settings.BOARD_ROW_COUNT):
                 for c in range(0, game_settings.BOARD_COL_COUNT):
                     possible_moves.append((r, c))
@@ -117,12 +119,8 @@ class State:
             for r in range(0, game_settings.BOARD_ROW_COUNT):
                 for c in range(0, game_settings.BOARD_COL_COUNT):
                     temp_move = board[r][c]
-                    if(temp_move != game_settings.EMPTY):
-                        continue
-                    if not State.has_neighbor((r, c), board, expansion_range):
-                        continue
-                    possible_moves.append((r, c))
-
+                    if temp_move == game_settings.EMPTY and State.has_neighbor((r, c), board, expansion_range):
+                        possible_moves.append((r, c))
         return possible_moves
     
     def has_neighbor(move_position, board, expansion_range):

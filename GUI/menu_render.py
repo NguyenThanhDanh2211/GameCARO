@@ -22,6 +22,7 @@ class Menu:
         self.playwFriend = False
         self.rank = False
         self.aboutme = False
+        self.guide = False
         self.quit = False
 
     def loop(self):
@@ -40,6 +41,8 @@ class Menu:
 
             ABOUTME_BTN = game_render.Button(screen=self.screen, pos=(100, 550), text_input='About me', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_WHITE, hovering_color=render_settings.COLOR_BLUE, size=(140, 40))
 
+            GUIDE_BTN = game_render.Button(screen=self.screen, pos=(260, 550), text_input='Guide', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_WHITE, hovering_color=render_settings.COLOR_BLUE, size=(140, 40))
+
             QUIT_BTN = game_render.Button(screen=self.screen, pos=(780, 550), text_input='Quit', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_WHITE, hovering_color=render_settings.COLOR_BLUE, size=(100, 40))
 
             #set title game
@@ -50,7 +53,7 @@ class Menu:
 
             # draw btn
             MENU_MOUSE_POS = pygame.mouse.get_pos()
-            for btn in [PLAYWAI_BTN, PLAYWFRIEND_BTN, ABOUTME_BTN, RANK_BTN, QUIT_BTN]:
+            for btn in [PLAYWAI_BTN, PLAYWFRIEND_BTN, ABOUTME_BTN, GUIDE_BTN, RANK_BTN, QUIT_BTN]:
                 btn.changeColor(MENU_MOUSE_POS)
                 btn.update()
 
@@ -76,6 +79,10 @@ class Menu:
                     if ABOUTME_BTN.checkForInput(MENU_MOUSE_POS):
                         self.init_btn()
                         self.aboutme = True
+                        self.running = False
+                    if GUIDE_BTN.checkForInput(MENU_MOUSE_POS):
+                        self.init_btn()
+                        self.guide = True
                         self.running = False
                     if QUIT_BTN.checkForInput(MENU_MOUSE_POS):
                         pygame.quit()

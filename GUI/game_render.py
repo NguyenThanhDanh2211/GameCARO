@@ -1,4 +1,6 @@
 import pygame
+import sys
+
 
 from state import State
 import Settings.render_settings as render_settings
@@ -138,6 +140,28 @@ class GameRender:
         self.screen.blit(com_score_text, com_score_rect)
 
         pygame.display.update()
+    
+    def check_winner_final(self, current_round, human_score, com_score, rounds):
+        if current_round > rounds:
+            winner_text = ""
+            if human_score > com_score:
+                winner_text = f"Human win!"
+            elif human_score < com_score:
+                winner_text = f"AI win!"
+
+            self.render_winner(winner_text, human_score, com_score)
+
+            waiting = True
+            while waiting:
+                pygame.event.pump()  # Cập nhật trạng thái sự kiện
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                        self.running = False
+                        waiting = False
+
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
 
     def draw_info_text(self, text, textColor):
         """
@@ -205,6 +229,22 @@ class GameRender:
             is_in_y_button_area = render_settings.HOME_BUTTON_POS_Y_MIN < mouse_y_position < render_settings.HOME_BUTTON_POS_Y_MAX
             return is_in_x_button_area and is_in_y_button_area
         return False 
+    
+    def is_continue_button_pressed(self):
+        """
+        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
+        return False
+        :return: The return value is a boolean.
+        """
+        mouse_button_pressed = pygame.mouse.get_pressed()
+        if mouse_button_pressed[0]:
+            mouse_position = pygame.mouse.get_pos()
+            mouse_x_position, mouse_y_position = mouse_position
+            is_in_x_button_area = render_settings.CONTINUE_BUTTON_POS_X_MIN < mouse_x_position < render_settings.CONTINUE_BUTTON_POS_X_MAX
+            is_in_y_button_area = render_settings.CONTINUE_BUTTON_POS_Y_MIN < mouse_y_position < render_settings.CONTINUE_BUTTON_POS_Y_MAX
+            return is_in_x_button_area and is_in_y_button_area
+        return False 
+
 
     def draw_board(self, board_state, info_text, info_text_color, last_move, last_move_color, current_round, human_score, com_score):
         """
@@ -225,14 +265,18 @@ class GameRender:
             pygame.draw.line(self.screen, render_settings.COLOR_BLACK,
             [render_settings.BOARD_POS_X_MIN, render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE * r], [render_settings.BOARD_POS_X_MIN + render_settings.BOARD_WIDTH, render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE * r], render_settings.BOARD_LINE_WIDTH)
         
+        
         # draw INFO TEXT
         self.draw_info_text(info_text, info_text_color)
 
         self.draw_scores(human_score, com_score)
         self.draw_turn_counter(current_round)
-        newgame = Button(screen=self.screen, pos=(700, 490), text_input='New game', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(150, 40))
+
+        continue_btn = Button(screen=self.screen, pos=(630, 490), text_input='Continue', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
+        continue_btn.update()
+        newgame = Button(screen=self.screen, pos=(770, 490), text_input='New game', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
         newgame.update()
-        home = Button(screen=self.screen, pos=(700, 540), text_input='Home', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 30), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(150, 40))
+        home = Button(screen=self.screen, pos=(700, 540), text_input='Home', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
         home.update()
    
         # render board moves
@@ -393,3 +437,89 @@ class Button:
         else:
             self.text = self.font.render(
                 self.text_input, True, self.base_color)
+
+
+from pygame.locals import *
+
+class InputBox:
+    def __init__(self, x, y, width, height, text=''):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.color_inactive = pygame.Color('lightskyblue3')
+        self.color_active = pygame.Color('dodgerblue2')
+        self.font = pygame.font.Font(None, 40)
+        self.text = text
+        self.txt_surface = self.font.render(text, True, self.color_inactive)
+        self.active = False
+
+        pygame.init()
+        pygame.font.init()
+        self.screen = pygame.display.set_mode((render_settings.WINDOW_WIDTH, render_settings.WINDOW_HEIGHT))
+        pygame.display.set_caption(render_settings.WINDOW_TITLE)
+
+        self.bg = pygame.image.load('Asset/bg.jpg')
+        self.bg = pygame.transform.scale(self.bg, (render_settings.WINDOW_WIDTH, render_settings.WINDOW_HEIGHT))
+        
+    def handle_event(self, event):
+        if event.type == KEYDOWN:
+            if self.active:
+                if event.key == K_RETURN:
+                    return self.text
+                elif event.key == K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+
+                self.txt_surface = self.font.render(self.text, True, self.color_active)
+
+        color = self.color_active if self.active else self.color_inactive
+        self.screen.blit(self.bg, (0, 0))
+        pygame.draw.rect(self.screen, color, self.rect, 2)
+        self.screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
+        pygame.draw.rect(self.screen, color, self.rect, 2)
+        pygame.display.update()  # Update the display
+
+    def activate(self):
+        self.active = True
+        self.txt_surface = self.font.render(self.text, True, self.color_active)
+
+    def deactivate(self):
+        self.active = False
+        self.txt_surface = self.font.render(self.text, True, self.color_inactive)
+
+    def draw_label(self):
+        font = pygame.font.Font('Asset/Huggo-3zdZG.otf', 40)
+        label = font.render("Enter your name", True, (255, 255, 255))
+        label_rect = label.get_rect(center=(self.rect.centerx, self.rect.top - 40))
+        self.screen.blit(label, label_rect)
+
+    def get_player_name():
+        clock = pygame.time.Clock()
+        input_box = InputBox(render_settings.WINDOW_WIDTH//2-125, render_settings.WINDOW_HEIGHT//2, 250, 40)
+
+        input_boxes = [input_box]
+        done = False
+
+        while not done:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    done = True
+                    sys.exit()
+                for box in input_boxes:
+                    if event.type == MOUSEBUTTONDOWN:
+                        if box.rect.collidepoint(event.pos):
+                            box.activate()
+                        else:
+                            box.deactivate()
+                    if event.type == KEYDOWN:
+                        if box.active:
+                            if event.key == K_RETURN:
+                                return box.text
+                            box.handle_event(event)
+
+            for box in input_boxes:
+                box.handle_event(pygame.event.Event(0)) # Update text surface
+
+            input_box.draw_label()
+            pygame.display.flip()
+            pygame.display.update()
+            clock.tick(30)
