@@ -2,7 +2,7 @@ import pygame
 import GUI.menu_render as menu_render
 import Settings.render_settings as render_settings
 from GUI.aboutme_render import Aboutme
-from GUI.menu_playwFriend_render import playwFriendMain
+from playwFriend import playwFriendMain
 from GUI.menu_playwAI_render import MenuPlaywithAI
 from GUI.rank import Rank
 from GUI.guide_render import Guide

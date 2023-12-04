@@ -50,7 +50,7 @@ class PlaywAI:
             # Nếu chưa tồn tại, tạo mới thông tin
             hard_collection.insert_one(game_state)
         
-    def sort_rank(self, current_round, human_score, com_score):
+    def count_round_completed(self, current_round, human_score, com_score):
         if current_round > 5:
             final_scores = final_scores_collection_hard.find_one({"player_name": self.player_name})
             
@@ -168,7 +168,7 @@ class PlaywAI:
                         time.sleep(wait_time)
 
                         self.render.check_winner_final(current_round, human_score, com_score, rounds)
-                        self.sort_rank(current_round, human_score, com_score)
+                        self.count_round_completed(current_round, human_score, com_score)
                         
                         self.current_match = State()
                         self.ai = ABPruning(self.current_match)
@@ -208,7 +208,7 @@ class PlaywAI:
                         time.sleep(wait_time)
 
                         self.render.check_winner_final(current_round, human_score, com_score, rounds)
-                        self.sort_rank(current_round, human_score, com_score)
+                        self.count_round_completed(current_round, human_score, com_score)
 
                         self.current_match = State()
                         self.ai = ABPruning(self.current_match)

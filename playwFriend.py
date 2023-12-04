@@ -4,6 +4,7 @@ import sys
 from state import State
 import Settings.render_settings as render_settings
 import Settings.game_settings as game_settings
+from GUI.game_render import Button
 
 class playwFriend:
     def __init__(self, state: State) -> None:
@@ -272,15 +273,21 @@ class playwFriend:
         self.draw_scores(human2_score, human1_score)
         self.draw_turn_counter(current_round)
 
-        # continue_btn = Button(screen=self.screen, pos=(630, 490), text_input='Continue', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
-        # continue_btn.update()
-        # newgame = Button(screen=self.screen, pos=(770, 490), text_input='New game', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
-        # newgame.update()
-        # home = Button(screen=self.screen, pos=(700, 540), text_input='Home', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
-        # home.update()
+        continue_btn = Button(screen=self.screen, pos=(630, 490), text_input='Continue', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
+        continue_btn.update()
+        newgame = Button(screen=self.screen, pos=(770, 490), text_input='New game', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
+        newgame.update()
+        home = Button(screen=self.screen, pos=(700, 540), text_input='Home', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
+        home.update()
    
         # render board moves
-        last_move_r, last_move_c = last_move
+        # last_move_r, last_move_c = last_move
+        if last_move:
+            last_move_r, last_move_c = last_move
+        else:
+            # Provide default values or handle the case where last_move is None
+            last_move_r, last_move_c = -1, -1  # Adjust the default values accordingly
+
         for r in range (0, game_settings.BOARD_ROW_COUNT):
             for c in range (0, game_settings.BOARD_COL_COUNT):
                 # set color
@@ -419,7 +426,7 @@ class playwFriendMain:
         self.running = True
 
     def loop(self):
-        rounds = 2  # Số lượt chơi
+        rounds = 5  # Số lượt chơi
         current_round = 1  # Đếm lượt chơi
         player1_score = 0
         player2_score = 0
@@ -435,9 +442,6 @@ class playwFriendMain:
                     self.current_match.moves[-1], current_round, player1_score, player2_score
                 )
 
-                # self.save_game_state(current_round, player1_score, player2_score)  # Lưu trạng thái
-
-                # Chờ 3 giây trước khi bắt đầu round mới
                 time.sleep(3)
 
                 current_round += 1
@@ -463,6 +467,9 @@ class playwFriendMain:
                             (-1, -1), current_round, player1_score, player2_score
                         )
                         break
+                    if (self.render.is_home_button_pressed()):
+                        self.running = False
+                        break
 
                     # HUMAN turn
                     if self.current_match.current_turn == game_settings.HUMAN:
@@ -479,9 +486,7 @@ class playwFriendMain:
                             player1_score += 1
                             current_round += 1
                             print('The next round will start in 3 seconds')
-                            # time.sleep(wait_time)
-
-                            # Chờ 3 giây trước khi bắt đầu round mới
+                          
                             time.sleep(3)
                             self.render.check_winner_final(current_round, player2_score, player1_score, rounds)
                             self.current_match = State()
@@ -505,9 +510,7 @@ class playwFriendMain:
                             player2_score += 1
                             current_round += 1
                             print('The next round will start in 3 seconds')
-                            # time.sleep(wait_time)
-
-                            # Chờ 3 giây trước khi bắt đầu round mới
+                            
                             time.sleep(3)
                             self.render.check_winner_final(current_round, player2_score, player1_score, rounds)
 
@@ -519,5 +522,3 @@ class playwFriendMain:
                             )
 
             pygame.display.update()
-
-
