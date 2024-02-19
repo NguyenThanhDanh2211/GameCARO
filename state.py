@@ -127,9 +127,9 @@ class State:
         """
         Kiểm tra xem một vị trí trong bàn cờ có lân cận với một vị trí của nước đi trước trong một phạm vi nhất định không
         
-        :move_position: vị trí muốn kiếm tra
-        :board: trạng thái hiện tại của bàn cờ
-        :expansion_range: số hàng và cột muốn mở rộng từ vị trí muốn kiếm tra
+        move_position: vị trí muốn kiếm tra
+        board: trạng thái hiện tại của bàn cờ
+        expansion_range: số hàng và cột muốn mở rộng từ vị trí muốn kiếm tra
         """
         move_r, move_c = move_position
         r_radius = expansion_range
@@ -151,13 +151,12 @@ class State:
     
     def high_impact_move(board, current_turn):
         """
-        It takes a board and a player, and returns the move that would have the highest impact on the
-        board, and the score of that move
+        Lấy trạng thái bàn cờ và người chơi chơi hiện tại, rồi trả lại nước đi có tác động lớn nhất lên bàn cờ và điểm của nước đi đó
         
-        :param board: the current board
-        :param current_turn: the current player's turn
-        :return: A tuple of the highest score move and the highest score. 
-        Return (None, 0) if the highest impact move's score do not reach HIGH_IMPACT_MOVE_THRESHOLD.
+        board: trạng thái hiện tại của bàn cờ
+        current_turn: nước đi hiện tại của người chơi
+        return: Một cặp gồm nước đi có điểm cao nhất và điểm cao nhất. 
+        Return (None, 0) nếu điểm của nước đi điểm có tác động cao nhất không đạt được HIGH_IMPACT_MOVE_THRESHOLD.
         """
         temp_board = deepcopy(board)
         board_O_score, board_X_score = State.evaluate(board)
@@ -188,14 +187,13 @@ class State:
 
     def get_direction_pattern_tuples(board, move, streak, current_turn):
         """
-        It takes a board, a move, a streak, and the current turn, and returns a list of lists of the
-        pieces in the directions of the move
+        Lấy trạng thái bàn cờ, một nước đi, streak và nước đi hiện tại. Trả về danh sách các quân cờ theo hướng di chuyển
         
-        :param board: the current board (will not be changed after running this function)
-        :param move: the move that is being evaluated
-        :param streak: the number of pieces in a row needed to win
-        :param current_turn: the current player's turn
-        :return: A list of lists of patterns.
+        board: trạng thái hiện tại của bàn cờ 
+        move: nước đi đang được đánh giá
+        streak: số quân cờ liên tiếp để dành chiến thắng
+        current_turn: người chơi hiện tại
+        return: danh sách các patterns.
         """
         if not State.is_valid_move(move, board):
             return []
@@ -264,10 +262,10 @@ class State:
     
     def evaluate(board):
         """
-        It takes a board and returns a tuple of scores for each player
-        
-        :param board: the board to evaluate
-        :return: The score of the board (O_score, X_score).
+        Lấy bàn cờ và trả về một cặp điểm cho mỗi người chơi
+
+        board: bàn cờ để đánh giá
+        return: điểm của bàn cờ (O_score, X_score).
         """
         O_score = 0
         X_score = 0
@@ -284,15 +282,15 @@ class State:
     # return(O_score, X_score)
     def evaluate_line(line):
         """
-        It takes a line of the board and returns the score for O and X
+        Lấy dòng trên bàn cờ và trả về điểm của X O trên dòng
         
-        :param line: a list of the board positions in a row, column, or diagonal
-        :return: a tuple of two values.
+        :line: danh sách các hàng, cột, đường chéo
+        :return: điểm X O trên dòng
         """
         O_score = 0
         X_score = 0
 
-        # check 6 patterns => khoải làm hihi =))
+        # check 6 patterns 
         pattern_length = 6
         if(len(line) >= pattern_length):
             for i in range(0, len(line) - pattern_length + 1):
@@ -338,21 +336,16 @@ class State:
 
     def checkmate(board, current_turn):
         """
-        It checks if there's a continuous-five (win condition) in the board
+        Kiểm tra xem có phải là 5 quân cùng loại liên tiếp hay không
         
-        :param board: the current board
-        :param current_turn: the current player's turn
-        :return: a tuple of the row and column of the winning move.
+        board: trạng thái bàn cờ hiện tại
+        current_turn: nước đi vừa thực hiện
+        return: hàng và cột của nước đi thắng
         """
         # checkmate = a continuous-five
         # continuous-five
-        streak = 5 - 1 # continuous-five cant be blocked
-        continuous_five_pattern = None
-        if(current_turn == game_settings.X):
-            continuous_five_pattern = ai_settings.X_ENDGAME_PATTERN
-        elif(current_turn == game_settings.O):
-            continuous_five_pattern = ai_settings.O_ENDGAME_PATTERN
-
+        # streak = 5 - 1 # 4 co the bi block
+        
         possible_moves = State.generate_possible_moves(board, 1)
         check_mate_moves = []
 
@@ -383,16 +376,16 @@ class State:
             return None
         
     def combo_move(board, current_turn):
-        # combo move
-        # is a combo which could create a one-end-blocked-four and a unblocked three 
-        # or n blocked-four (n>=2)
+        """
+        combo_move được thiết kế để kiểm tra xem có một nước đi nào đó có thể tạo ra một tình huống combo đặc biệt trên bảng cờ hay không.
+        """
+        # khởi tạo các biến 
+        blocked_four_patterns = [] # Danh sách các pattern chứa 4 nước đi của người chơi hiện tại, một ô trống và không bị chặn ở một đầu (blocked-four)
+        blocked_four_pattern_length = 5 # độ dài blocked-four
+        matched_blocked_four_pattern_move_direction_list = [] #Danh sách các tuples chứa hướng và nước đi, tương ứng với những nước đi có thể tạo ra một blocked-four.
+        move_direction_dictionary = dict() # Một từ điển chứa thông tin về hướng và pattern của các nước đi đã kiểm tra.
 
-        # get moves that could create one-end-blocked-four
-        blocked_four_patterns = []
-        blocked_four_pattern_length = 5
-        matched_blocked_four_pattern_move_direction_list = []
-        move_direction_dictionary = dict()
-        # add element(s) to blocked_four_patterns
+        # Thêm Phần Tử vào blocked_four_patterns
         if(current_turn == game_settings.X):
             for pattern in ai_settings.X_5_PATTERNS:
                 if(pattern.count(game_settings.X) == 4):
@@ -401,13 +394,14 @@ class State:
             for pattern in ai_settings.O_5_PATTERNS:
                 if(pattern.count(game_settings.O) == 4):
                     blocked_four_patterns.append(pattern)
-        # scan for blocked-four
+
+        # kiểm tra từng hướng đi của nước đi
         possible_moves = State.generate_possible_moves(board, 2)
         for p_m_move in possible_moves:
-            move_direction_set = set()
-            matched_direction_count = 0
+            move_direction_set = set() #  lưu trữ các hướng đã kiểm tra.
+            matched_direction_count = 0 # Đếm số hướng đã kiểm tra khớp với blocked-four.
 
-            direction_pattern_tuples = State.get_direction_pattern_tuples(board, p_m_move, 4, current_turn) # streak = 4 because we are checking length-5 patterns
+            direction_pattern_tuples = State.get_direction_pattern_tuples(board, p_m_move, 4, current_turn) # streak = 4 vì pattern đang xét có độ dài bằng 5
             if(len(direction_pattern_tuples) > 0) :
                 for tuple in direction_pattern_tuples:
                     direction, pattern = tuple
@@ -430,5 +424,5 @@ class State:
                             if (direction, p_m_move) not in move_direction_set:
                                 move_direction_set.add((direction, p_m_move))
                                 matched_direction_count += 1
-                                if matched_direction_count > 1: # this means that move can create at least 2 blocked fours -> a combo move
-                                    return p_m_move    
+                                if matched_direction_count > 1: # cần tạo ít nhất 2 locked fours -> a combo 
+                                    return p_m_move  
