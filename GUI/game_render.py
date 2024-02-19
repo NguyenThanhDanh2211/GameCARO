@@ -18,8 +18,6 @@ class GameRender:
         self.human_score = 0
         self.com_score = 0
 
-        # self.screen.fill(render_settings.BOARD_COLOR) => đây
-
         bg = pygame.image.load('Asset/bg.jpg')
         bg = pygame.transform.scale(bg, (render_settings.WINDOW_WIDTH, render_settings.WINDOW_HEIGHT))
 
@@ -40,12 +38,14 @@ class GameRender:
     def render_state(self, board, current_turn, player_win,last_move, current_round, human_score, com_score):
     
         """
-        It renders board state and displays that board state
-        
-        :param board: the current state of the board
-        :param current_turn: The current turn of the game
-        :param player_win: The player who won the game
-        :return: The return value of the function is the value of the last expression evaluated.
+        Hiển thị trạng thái của bàn cờ
+        board: trạng thái hiện tại của bàn cờ
+        current_turn: nước đi hiện tại
+        player_win: người chiến thắng trò chơi
+        last_move: nước đi trước
+        current_round: vòng chơi hiện tại
+        human_score: điểm của người chơi
+        com_score: điểm của máy
         """
         
         self.clear()
@@ -75,10 +75,10 @@ class GameRender:
 
     def draw_X(self, x, y, color):
         """
-        Draw an X on the screen at the given coordinates
+        Vẽ X theo tọa độ
         
-        :param x: the x coordinate of the cell
-        :param y: 0-2
+        x: tọa độ x của ô
+        y: 0-2
         """
         #    x
         # y ╔═════════════════════════════════▶
@@ -105,18 +105,16 @@ class GameRender:
         
     def draw_O(self, x, y, color):
         """
-        Draw a circle with a radius of O_RADIUS - O_CELL_BORDER at the center of the square at position
-        (x,y) on the board.
+        Vẽ một hình tròn có bán kính O_RADIUS - O_CELL_BORDER ở tâm hình vuông tại vị trí (x,y) trên bảng.
         
-        :param x: the x coordinate of the board
-        :param y: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-        24, 25, 26, 27, 28, 29,
+        x: tọa độ X
+        y: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
         """
         posX = render_settings.BOARD_POS_X_MIN + render_settings.SQUARE_SIZE/2 + y * render_settings.SQUARE_SIZE + render_settings.O_LINE_THICKNESS/2
         posY = render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE/2 + x * render_settings.SQUARE_SIZE + render_settings.O_LINE_THICKNESS/2
-        # subtract cell border
+
         radius = render_settings.O_RADIUS - render_settings.O_CELL_BORDER
-        # draw circle
+
         pygame.draw.circle(self.screen, color, [posX, posY], radius , render_settings.O_LINE_THICKNESS)
     
     def render_winner(self, winner_text, human_score, com_score):
@@ -165,10 +163,10 @@ class GameRender:
 
     def draw_info_text(self, text, textColor):
         """
-        It draws text to the screen
+        Hiển thị lượt chơi, cũng như người chiến thắng
         
-        :param text: the text to be displayed
-        :param textColor: (255, 255, 255)
+        :text: text muốn hiển thị
+        :textColor: (255, 255, 255)
         """
         text_pos = ((render_settings.WINDOW_WIDTH-render_settings.WINDOW_WIDTH/5+25), 130+render_settings.BORDER_SIZE + 30/2)
 
@@ -202,9 +200,7 @@ class GameRender:
         
     def is_new_game_button_pressed(self):
         """
-        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
-        return False
-        :return: The return value is a boolean.
+        Button New game, nếu được nhấn thì return True, ngược lại return False
         """
         mouse_button_pressed = pygame.mouse.get_pressed()
         if mouse_button_pressed[0]:
@@ -217,9 +213,7 @@ class GameRender:
 
     def is_home_button_pressed(self):
         """
-        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
-        return False
-        :return: The return value is a boolean.
+        Button Home, nếu được nhấn thì return True, ngược lại return False
         """
         mouse_button_pressed = pygame.mouse.get_pressed()
         if mouse_button_pressed[0]:
@@ -232,9 +226,7 @@ class GameRender:
     
     def is_continue_button_pressed(self):
         """
-        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
-        return False
-        :return: The return value is a boolean.
+        Button Continue, nếu được nhấn thì return True, ngược lại return False
         """
         mouse_button_pressed = pygame.mouse.get_pressed()
         if mouse_button_pressed[0]:
@@ -248,19 +240,16 @@ class GameRender:
 
     def draw_board(self, board_state, info_text, info_text_color, last_move, last_move_color, current_round, human_score, com_score):
         """
+        Vẽ bàn cờ, text, các button, nước đi trên bàn cờ, vòng chơi và điểm số
         It draws the board, the info text, the new game button, and the moves on the board.
-        
-        :param board_state: the current state of the board
-        :param infoText: The text to be displayed on the screen
-        :param infoTextColor: The color of the text
         """
-        # draw board
-        # draw vertical line
+        # vẽ bàn cờ
+        # vẽ đường thẳng
         for r in range (0, game_settings.BOARD_COL_COUNT + 1):
             
             pygame.draw.line(self.screen, render_settings.COLOR_BLACK, 
             [render_settings.BOARD_POS_X_MIN + render_settings.SQUARE_SIZE * r, render_settings.BOARD_POS_Y_MIN], [render_settings.BOARD_POS_X_MIN + render_settings.SQUARE_SIZE * r, render_settings.BOARD_POS_Y_MIN + render_settings.BOARD_HEIGHT], render_settings.BOARD_LINE_WIDTH)
-        # draw horizontal line
+        # vẽ hàng ngang
         for r in range (0, game_settings.BOARD_ROW_COUNT + 1):
             pygame.draw.line(self.screen, render_settings.COLOR_BLACK,
             [render_settings.BOARD_POS_X_MIN, render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE * r], [render_settings.BOARD_POS_X_MIN + render_settings.BOARD_WIDTH, render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE * r], render_settings.BOARD_LINE_WIDTH)
@@ -279,7 +268,7 @@ class GameRender:
         home = Button(screen=self.screen, pos=(700, 540), text_input='Home', font=pygame.font.Font('Asset/Qlassy-axE4x.ttf', 25), base_color=render_settings.COLOR_BLACK, hovering_color=render_settings.COLOR_BLUE, size=(120, 30))
         home.update()
    
-        # render board moves
+        # hiển thị nước đi trên bàn cờ
         last_move_r, last_move_c = last_move
         for r in range (0, game_settings.BOARD_ROW_COUNT):
             for c in range (0, game_settings.BOARD_COL_COUNT):
@@ -309,12 +298,11 @@ class GameRender:
 
     def handle_com_move(self, com_move, state: State):
         """
-        The function takes in a move from the AI and updates the state of the game
-        
-        :param com_move: the move the AI made
-        :param state: the current state of the game
+        Lấy nước đi của AI và hiển thị lên bàn cờ
+        :com_move: nước đi do AI thực hiện
+        :state: trạng thái hiện tại của bàn cờ
         :type state: State
-        :return: the move of the computer.
+        :return: nước đi do AI thực hiện
         """
 
         # Announcement
@@ -327,13 +315,11 @@ class GameRender:
         
     def is_new_move_valid(self, mouse_position, state: State):
         """
-        If the mouse position is in the board area, and the selected square is empty, then the move is
-        valid
-        
-        :param mouse_position: The position of the mouse on the screen
-        :param state: State
+        Nhấn vào vị trí bất kì trong bàn cờ, tại 1 ô trống thì đó là nước đi hợp lệ
+        :mouse_position: vị trí nhấn chuột trên màn hình
+        :state: State
         :type state: State
-        :return: The function is_new_move_valid() returns a boolean value.
+        :return: hàm trả về giá trị True, False
         """
         if (self.is_mouse_position_in_board_area(mouse_position)):
             square_x_position, square_y_position =  self.get_board_square_position(mouse_position)
@@ -344,10 +330,9 @@ class GameRender:
 
     def is_mouse_position_in_board_area(self, mouse_position):
         """
-        It checks if the mouse position is within the board area
-        
-        :param mouse_position: (x, y)
-        :return: The return value is a boolean.
+        Kiếm tra vị trí nhấn chuột có nằm trong bàn cờ hay không
+        :mouse_position: vị trí (x, y)
+        :return: Trả về True, False
         """
         mouse_x_position, mouse_y_position = mouse_position
         is_mouse_x_position_valid = render_settings.BOARD_POS_X_MIN < mouse_x_position < render_settings.BOARD_POS_X_MAX
@@ -356,20 +341,20 @@ class GameRender:
 
     def get_board_square_position(self, mouse_position):
         """
-        The boardsquare's x, y position is inverse to the mouse positions'.
+        Chuyển đổi tọa độ của chuột trên màn hình thành tọa độ của ô trên bàn cờ
         
-        :param mouse_position: (x, y)
+        :mouse_position: (x, y)
         :return: The board_square_x_position and board_square_y_position are being returned.
         """
         mouse_x_position, mouse_y_position = mouse_position
-        #The boardsquare's x, y position is inverse to the mouse positions'. 
+
         board_square_y_position = int((mouse_x_position - render_settings.BOARD_POS_X_MIN) / render_settings.SQUARE_SIZE)
         board_square_x_position = int((mouse_y_position - render_settings.BOARD_POS_Y_MIN) / render_settings.SQUARE_SIZE)
         return (board_square_x_position, board_square_y_position)
     
     def clear(self):
         """
-        It clears the screen and updates the display
+        Xóa màn hình
         """
         bg = pygame.image.load('Asset/bg.jpg')
         bg = pygame.transform.scale(bg, (render_settings.WINDOW_WIDTH, render_settings.WINDOW_HEIGHT))
@@ -384,12 +369,11 @@ class GameRender:
 
     def handle_human_move(self, state: State):
         """
-        It takes human's mouse left click position and checks if it's a valid move. If it is, it updates the state with
-        the move
+        Lấy vị trí nhấp chuột của người chơi và kiểm tra xem đó có phải là một nước đi hợp lệ hay không. Nếu đúng, nó sẽ cập nhật trạng thái lên bàn cờ
         
-        :param state: State
-        :type state: State
-        :return: the position of the square that the human player clicked on.
+        state: State
+        type state: State
+        return: vị trí mà người chơi nhấn vào
         """
         mouse_button_pressed = pygame.mouse.get_pressed()
         # mouse left click
