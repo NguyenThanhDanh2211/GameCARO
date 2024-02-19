@@ -161,10 +161,8 @@ class PlaywAI_EASY:
                     if State.game_over(self.current_match.board):
 
                         # Announcement
-                        print("Game Over!")
                         current_round += 1
                         human_score += 1
-                        print('The next round will start in 3 seconds')
                         time.sleep(wait_time)
 
                         self.render.check_winner_final(current_round, human_score, com_score, rounds)
@@ -184,7 +182,7 @@ class PlaywAI_EASY:
                         print("AI is calculating next move...")
                         print("---------------------------------")
 
-                        ai_move = self.ai.random_move(self.current_match, 1)  # => ramdom move nè
+                        ai_move = self.ai.random_move(self.current_match, 1)  # => ramdom move
 
                         AI_calulation_time += pygame.time.get_ticks()
 
@@ -201,10 +199,8 @@ class PlaywAI_EASY:
                     if State.game_over(self.current_match.board):
 
                         # Announcement
-                        print("Game Over!")
                         current_round += 1
                         com_score += 1
-                        print('The next round will start in 3 seconds')
                         time.sleep(wait_time)
 
                         self.render.check_winner_final(current_round, human_score, com_score, rounds)
