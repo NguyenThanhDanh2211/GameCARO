@@ -161,10 +161,8 @@ class PlaywAI:
                     if State.game_over(self.current_match.board):
 
                         # Announcement
-                        print("Game Over!")
                         current_round += 1
                         human_score += 1
-                        print('The next round will start in 3 seconds')
                         time.sleep(wait_time)
 
                         self.render.check_winner_final(current_round, human_score, com_score, rounds)
@@ -201,10 +199,8 @@ class PlaywAI:
                     if State.game_over(self.current_match.board):
 
                         # Announcement
-                        print("Game Over!")
                         current_round += 1
                         com_score += 1
-                        print('The next round will start in 3 seconds')
                         time.sleep(wait_time)
 
                         self.render.check_winner_final(current_round, human_score, com_score, rounds)
@@ -215,7 +211,4 @@ class PlaywAI:
                         self.render.render_state(self.current_match.board, game_settings.FIRST_TURN_HUMAN, False, (-1, -1), current_round, human_score, com_score)
 
             pygame.display.update()
-
-
-
-# PlaywAI().loop()
+            
