@@ -12,11 +12,8 @@ class ABPruning:
 
     def next_move(self):
         """
-        The function first checks if the current state is the first move or not. If it is, it will
-        return a random move. If not, it will check if the opponent has a high impact move. If it does,
-        the AI will take that move. If not, it will use the alpha-beta pruning algorithm to find the
-        best move
-        :return: The next move to be played.
+        Hàm này sẽ kiểm tra xem trạng thái hiện tại có phải là bước đi đầu tiên hay không. Nếu có, nó sẽ trả về một bước di chuyển ngẫu nhiên. Nếu không, nó sẽ kiểm tra xem đối thủ có high impact move hay không. Nếu có, AI sẽ thực hiện động thái đó. Nếu không, nó sẽ sử dụng thuật toán cắt tỉa alpha-beta để tìm ra nước đi tốt nhất
+        :return: nước đi tiếp theo được thực hiện
         """
         # =======================================
         if(np.array_equal(self.state.board, game_settings.EMPTY_BOARD) or len(self.state.moves) <= 3):
@@ -27,8 +24,8 @@ class ABPruning:
 
         # =======================================
         # CHECKMATE MOVE
-        # if opponent or AI has checkmate move, AI will take this move
-        # take move if AI has checkmate move
+        # nếu đối thủ hoặc AI có checkmate move thì AI sẽ thực hiện nước đi này
+        # đi nước đi nếu AI có checkmate move
 
         # Announcement
         print("Checking for checkmate move...")
@@ -41,7 +38,7 @@ class ABPruning:
         
             return com_checkmate_move
         
-        # otherwise if opponent has checkmate move, take it
+        # ngược lại nếu đối thủ có checkmate move thì thực hiện
         opponent_checkmate_move = State.checkmate(self.state.board, game_settings.get_opponent(self.state.current_turn))
         if opponent_checkmate_move:
 
@@ -58,8 +55,8 @@ class ABPruning:
         
         # =======================================
         # HIGH-IMPACT MOVE
-        # if opponent or AI has a high-impact move, 
-        # AI will take whether move which has highest score
+        # nếu đối thủ hoặc AI high-impact move, 
+        # AI sẽ thực hiện nước đi nào có điểm cao nhất
 
         # Announcement
         print("Checking for high-impact move...")
@@ -75,8 +72,8 @@ class ABPruning:
                 
                 return opponent_high_impact_move
             
-            if com_high_impact_move and com_high_impact_score >= opponent_high_impact_score: # >=: Prioritize playing the move to the advantage of the player
-                
+            if com_high_impact_move and com_high_impact_score >= opponent_high_impact_score: # Ưu tiên các nước đi có lợi cho người chơi
+
                 # Announcement
                 print("AI has discovered that it has a high-impact move.")
                 print("AI has taken this move (an offensive move).")
@@ -91,7 +88,7 @@ class ABPruning:
 
         # =======================================
         # COMBO MOVE
-        # if opponent or AI has a combo move, AI will take this move
+        # nếu đối thủ hoặc AI có combo move, AI sẽ thực hiện nó
 
         # Announcement
         print("Checking for combo moves...")
@@ -106,7 +103,7 @@ class ABPruning:
             
             return com_combo_move
         
-        if opponent_combo_move: # >=: Prioritize the move that gives the current player an advantage.
+        if opponent_combo_move: # Ưu tiên nước đi mang lại lợi thế cho người chơi hiện tại.
             
             # Announcement
             print("HUMAN has a combo move. Block it!")
@@ -118,16 +115,13 @@ class ABPruning:
         print("---------------------------------")
 
         # =======================================
-        # if not
+        # nếu không => AI sử dụng Alpha-Beta pruning
 
         # Announcement
         print("AI has decided to use the Alpha-Beta pruning algorithm. Calculating...")
         
         root_node = MinimaxNode(self.state.board, self.state.moves[-1::1], self.state.current_turn, None)
         
-        # #test
-        # attrs = vars(root_node)
-        # print(', '.join("%s: %s" % item for item in attrs.items()))
 
         ABPruning.alpha_beta(root_node, ai_settings.MAX_TREE_DEPTH_LEVEL, -infinity, +infinity, True)
         
@@ -138,13 +132,11 @@ class ABPruning:
 
     def random_move(self, state: State, expansion_range):
         """
-        The function takes in a state and an expansion range, and returns a random move from the
-        possible moves
+        Lấy trạng thái và phạm vi mở rộng, đồng thời trả về một bước di chuyển ngẫu nhiên từ các bước di chuyển có thể
         
-        :param state: the current state of the game
+        :state: trạng thái hiện tại của bàn cờ
         :type state: State
-        :param expansion_range: The number of steps to expand the search tree
-        :return: A tuple of two integers.
+        :expansion_range: phạm vị mở rộng của cây tìm kiếm
         """
         # AI move first
         # if(state.board == game_settings.EMPTY_BOARD):
@@ -157,24 +149,19 @@ class ABPruning:
 
     def alpha_beta(current_node: MinimaxNode, depth, alpha, beta, maximizingPlayer):
         """
+        Đây là hàm đệ quy thực hiện thuật toán cắt tỉa alpha beta để tính điểm tốt nhất có thể cho người chơi hiện tại, dựa trên trạng thái bảng hiện tại
         
-        It's a recursive function that implements alpha beta pruning algorithm 
-        to calculate the best possible score for the current player, given the current board state
-        
-        :param current_node: MinimaxNode, depth, alpha, beta, maximizingPlayer
-        :type current_node: MinimaxNode
-        :param depth: The depth of the search tree
-        :param alpha: the best value that the maximizing player currently can guarantee at this point or
-        above
-        :param beta: the best value that the maximizing player currently can guarantee at that level or
-        higher
-        :param maximizingPlayer: True if it's the AI's turn, False if it's the player's turn
-        :return: The value of the best move.
+        current_node: MinimaxNode
+        type current_node: MinimaxNode
+        depth: độ sâu của cây
+        alpha: giá trị tốt nhất mà người chơi MAX có thể đạt được tại nút MAX trên đường đi
+        beta: giá trị tốt nhất mà người chơi MIN có thể đạt được tại nút MIN trên đường đi
+        maximizingPlayer: True nếu là lượt của AI, False là lượt của người chơi
+        return: giá trị của nước đi tốt nhất
         """
         # https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-4-alpha-beta-pruning/
         # https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
         
-        # fail-soft alpha-beta
         if(depth == 0 or State.game_over(current_node.board)):
             O_score, X_score = State.evaluate(current_node.board)
             return X_score - O_score
