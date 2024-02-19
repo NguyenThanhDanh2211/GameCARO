@@ -12,8 +12,8 @@ class MinimaxNode:
 
     def generate_child_nodes(self):
         """
-        It takes a board state, and returns a list of all possible moves that can be made from that board state
-        :return: A list of MinimaxNode objects.
+        Lấy trạng thái của bàn cờ và trả về danh sách tất cả các nước đi có thể được thực hiện từ trạng thái của bàn cờ đó
+        :return: danh sach các nước đi có thể
         """
         possible_moves = State.generate_possible_moves(self.board, ai_settings.EXPANSION_RANGE)
         child_nodes = []
