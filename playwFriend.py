@@ -39,16 +39,7 @@ class playwFriend:
 
        
     def render_state(self, board, current_turn, player_win,last_move, current_round, human1_score, human2_score):
-    
-        """
-        It renders board state and displays that board state
-        
-        :param board: the current state of the board
-        :param current_turn: The current turn of the game
-        :param player_win: The player who won the game
-        :return: The return value of the function is the value of the last expression evaluated.
-        """
-        
+            
         self.clear()
         
         # human1 WIN
@@ -69,55 +60,33 @@ class playwFriend:
             if(current_turn == game_settings.HUMAN):
                 self.draw_board(board, render_settings.O_TURN_INFO_TEXT, render_settings.COLOR_BLUE, last_move, render_settings.get_last_move_color(last_turn), current_round, human1_score, human2_score)
                 return
-            # GAME IS NOT OVER YET. COM TURN
+            # GAME IS NOT OVER YET. HUMAN2 TURN
             if(current_turn == game_settings.COM):
                 self.draw_board(board, render_settings.X_TURN_INFO_TEXT, render_settings.COLOR_RED, last_move, render_settings.get_last_move_color(last_turn), current_round, human1_score, human2_score)
                 return
 
     def draw_X(self, x, y, color):
-        """
-        Draw an X on the screen at the given coordinates
-        
-        :param x: the x coordinate of the cell
-        :param y: 0-2
-        """
-        #    x
-        # y ╔═════════════════════════════════▶
-        #   ║ (X1, Y1) ╔═══╗ (X2, Y1)
-        #   ║          ║   ║
-        #   ▼ (X1, Y2) ╚═══╝ (X2, Y2)
-        #
-        # line 1: (X1, Y1) -> (X2, Y2)
-        # line 2: (X1, Y2) -> (X2, Y1)
         pos_X1 = render_settings.BOARD_POS_X_MIN + y * render_settings.SQUARE_SIZE
         pos_X2 = render_settings.BOARD_POS_X_MIN + (y+1) * render_settings.SQUARE_SIZE
         pos_Y1 = render_settings.BOARD_POS_Y_MIN + x * render_settings.SQUARE_SIZE
         pos_Y2 = render_settings.BOARD_POS_Y_MIN + (x+1) * render_settings.SQUARE_SIZE
-        # subtract cell border
+
         pos_X1 = pos_X1 + render_settings.X_CELL_BORDER
         pos_X2 = pos_X2 - render_settings.X_CELL_BORDER
         pos_Y1 = pos_Y1 + render_settings.X_CELL_BORDER
         pos_Y2 = pos_Y2 - render_settings.X_CELL_BORDER
 
-        # draw line 1
         pygame.draw.line(self.screen, color, (pos_X1, pos_Y1), (pos_X2, pos_Y2), render_settings.X_LINE_THICKNESS)
-        # draw line 2
+
         pygame.draw.line(self.screen, color, (pos_X1, pos_Y2), (pos_X2, pos_Y1), render_settings.X_LINE_THICKNESS)
         
     def draw_O(self, x, y, color):
-        """
-        Draw a circle with a radius of O_RADIUS - O_CELL_BORDER at the center of the square at position
-        (x,y) on the board.
         
-        :param x: the x coordinate of the board
-        :param y: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-        24, 25, 26, 27, 28, 29,
-        """
         posX = render_settings.BOARD_POS_X_MIN + render_settings.SQUARE_SIZE/2 + y * render_settings.SQUARE_SIZE + render_settings.O_LINE_THICKNESS/2
         posY = render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE/2 + x * render_settings.SQUARE_SIZE + render_settings.O_LINE_THICKNESS/2
-        # subtract cell border
+
         radius = render_settings.O_RADIUS - render_settings.O_CELL_BORDER
-        # draw circle
+
         pygame.draw.circle(self.screen, color, [posX, posY], radius , render_settings.O_LINE_THICKNESS)
     
     def render_winner(self, winner_text, human2_score, human1_score):
@@ -165,12 +134,6 @@ class playwFriend:
                         sys.exit()
 
     def draw_info_text(self, text, textColor):
-        """
-        It draws text to the screen
-        
-        :param text: the text to be displayed
-        :param textColor: (255, 255, 255)
-        """
         text_pos = ((render_settings.WINDOW_WIDTH-render_settings.WINDOW_WIDTH/5+25), 130+render_settings.BORDER_SIZE + 30/2)
 
         font_text = pygame.font.Font('Asset/Huggo-3zdZG.otf', 30)
@@ -202,11 +165,6 @@ class playwFriend:
         self.screen.blit(human1_score_text, human1_score_rect)
         
     def is_new_game_button_pressed(self):
-        """
-        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
-        return False
-        :return: The return value is a boolean.
-        """
         mouse_button_pressed = pygame.mouse.get_pressed()
         if mouse_button_pressed[0]:
             mouse_position = pygame.mouse.get_pos()
@@ -217,11 +175,6 @@ class playwFriend:
         return False  
 
     def is_home_button_pressed(self):
-        """
-        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
-        return False
-        :return: The return value is a boolean.
-        """
         mouse_button_pressed = pygame.mouse.get_pressed()
         if mouse_button_pressed[0]:
             mouse_position = pygame.mouse.get_pos()
@@ -232,11 +185,6 @@ class playwFriend:
         return False 
     
     def is_continue_button_pressed(self):
-        """
-        If the mouse button is pressed, and the mouse is in the button area, return True. Otherwise,
-        return False
-        :return: The return value is a boolean.
-        """
         mouse_button_pressed = pygame.mouse.get_pressed()
         if mouse_button_pressed[0]:
             mouse_position = pygame.mouse.get_pos()
@@ -248,13 +196,6 @@ class playwFriend:
 
 
     def draw_board(self, board_state, info_text, info_text_color, last_move, last_move_color, current_round, human2_score, human1_score):
-        """
-        It draws the board, the info text, the new game button, and the moves on the board.
-        
-        :param board_state: the current state of the board
-        :param infoText: The text to be displayed on the screen
-        :param infoTextColor: The color of the text
-        """
         # draw board
         # draw vertical line
         for r in range (0, game_settings.BOARD_COL_COUNT + 1):
@@ -265,7 +206,6 @@ class playwFriend:
         for r in range (0, game_settings.BOARD_ROW_COUNT + 1):
             pygame.draw.line(self.screen, render_settings.COLOR_BLACK,
             [render_settings.BOARD_POS_X_MIN, render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE * r], [render_settings.BOARD_POS_X_MIN + render_settings.BOARD_WIDTH, render_settings.BOARD_POS_Y_MIN + render_settings.SQUARE_SIZE * r], render_settings.BOARD_LINE_WIDTH)
-        
         
         # draw INFO TEXT
         self.draw_info_text(info_text, info_text_color)
@@ -281,13 +221,7 @@ class playwFriend:
         home.update()
    
         # render board moves
-        # last_move_r, last_move_c = last_move
-        if last_move:
-            last_move_r, last_move_c = last_move
-        else:
-            # Provide default values or handle the case where last_move is None
-            last_move_r, last_move_c = -1, -1  # Adjust the default values accordingly
-
+        last_move_r, last_move_c = last_move
         for r in range (0, game_settings.BOARD_ROW_COUNT):
             for c in range (0, game_settings.BOARD_COL_COUNT):
                 # set color
@@ -309,21 +243,8 @@ class playwFriend:
                 if board_state[r][c] == game_settings.X: 
                     self.draw_X(r, c, color)
         pygame.display.update()
-
-        # Announcement
-        print("Drawing board is completed.")
-        print("==================================================================")
       
     def is_new_move_valid(self, mouse_position, state: State):
-        """
-        If the mouse position is in the board area, and the selected square is empty, then the move is
-        valid
-        
-        :param mouse_position: The position of the mouse on the screen
-        :param state: State
-        :type state: State
-        :return: The function is_new_move_valid() returns a boolean value.
-        """
         if (self.is_mouse_position_in_board_area(mouse_position)):
             square_x_position, square_y_position =  self.get_board_square_position(mouse_position)
             is_selected_square_empty = state.board[square_x_position][square_y_position] == game_settings.EMPTY
@@ -332,34 +253,18 @@ class playwFriend:
             return False
 
     def is_mouse_position_in_board_area(self, mouse_position):
-        """
-        It checks if the mouse position is within the board area
-        
-        :param mouse_position: (x, y)
-        :return: The return value is a boolean.
-        """
         mouse_x_position, mouse_y_position = mouse_position
         is_mouse_x_position_valid = render_settings.BOARD_POS_X_MIN < mouse_x_position < render_settings.BOARD_POS_X_MAX
         is_mouse_y_position_valid = render_settings.BOARD_POS_Y_MIN < mouse_y_position < render_settings.BOARD_POS_Y_MAX
         return is_mouse_x_position_valid and is_mouse_y_position_valid
 
     def get_board_square_position(self, mouse_position):
-        """
-        The boardsquare's x, y position is inverse to the mouse positions'.
-        
-        :param mouse_position: (x, y)
-        :return: The board_square_x_position and board_square_y_position are being returned.
-        """
         mouse_x_position, mouse_y_position = mouse_position
-        #The boardsquare's x, y position is inverse to the mouse positions'. 
         board_square_y_position = int((mouse_x_position - render_settings.BOARD_POS_X_MIN) / render_settings.SQUARE_SIZE)
         board_square_x_position = int((mouse_y_position - render_settings.BOARD_POS_Y_MIN) / render_settings.SQUARE_SIZE)
         return (board_square_x_position, board_square_y_position)
     
     def clear(self):
-        """
-        It clears the screen and updates the display
-        """
         bg = pygame.image.load('Asset/bg.jpg')
         bg = pygame.transform.scale(bg, (render_settings.WINDOW_WIDTH, render_settings.WINDOW_HEIGHT))
 
@@ -372,47 +277,23 @@ class playwFriend:
         pygame.display.update()
 
     def handle_human2_move(self, state: State):
-        """
-        It takes human's mouse left click position and checks if it's a valid move. If it is, it updates the state with
-        the move
-        
-        :param state: State
-        :type state: State
-        :return: the position of the square that the human player clicked on.
-        """
         mouse_button_pressed = pygame.mouse.get_pressed()
         # mouse left click
         if mouse_button_pressed[0]:
             mouse_position = pygame.mouse.get_pos()
             if self.is_new_move_valid(mouse_position, state):
                 human_move = self.get_board_square_position(mouse_position)
-
-                # Announcement
-                print("HUMAN move: (row:", human_move[0], ", column:", human_move[1], ").")
-                
                 state.update_move(game_settings.HUMAN, human_move)
                 return
         return
     
     def handle_human1_move(self, state: State):
-        """
-        It takes human's mouse left click position and checks if it's a valid move. If it is, it updates the state with
-        the move
-        
-        :param state: State
-        :type state: State
-        :return: the position of the square that the human player clicked on.
-        """
         mouse_button_pressed = pygame.mouse.get_pressed()
         # mouse left click
         if mouse_button_pressed[0]:
             mouse_position = pygame.mouse.get_pos()
             if self.is_new_move_valid(mouse_position, state):
                 human_move = self.get_board_square_position(mouse_position)
-
-                # Announcement
-                print("HUMAN 1 move: (row:", human_move[0], ", column:", human_move[1], ").")
-                
                 state.update_move(game_settings.COM, human_move)
                 return
         return
@@ -441,7 +322,6 @@ class playwFriendMain:
                     self.current_match.board, game_settings.NO_ONE, game_settings.NO_ONE,
                     self.current_match.moves[-1], current_round, player1_score, player2_score
                 )
-
                 time.sleep(3)
 
                 current_round += 1
@@ -471,21 +351,19 @@ class playwFriendMain:
                         self.running = False
                         break
 
-                    # HUMAN turn
+                    # HUMAN1 turn
                     if self.current_match.current_turn == game_settings.HUMAN:
                         self.render.handle_human2_move(self.current_match)
                         self.render.render_state(
-                            self.current_match.board, game_settings.COM,  # Switch turn to COM
+                            self.current_match.board, game_settings.COM,  # Switch turn to HUMAN2
                             State.game_over(self.current_match.board), self.current_match.moves[-1],
                             current_round, player1_score, player2_score
                         )
 
                         # Check for a win
                         if State.game_over(self.current_match.board):
-                            print("Game Over!")
                             player1_score += 1
                             current_round += 1
-                            print('The next round will start in 3 seconds')
                           
                             time.sleep(3)
                             self.render.check_winner_final(current_round, player2_score, player1_score, rounds)
@@ -495,26 +373,23 @@ class playwFriendMain:
                                 (-1, -1), current_round, player1_score, player2_score
                             )
 
-                    # COM turn
+                    # HUMAN2 turn
                     elif self.current_match.current_turn == game_settings.COM:
                         self.render.handle_human1_move(self.current_match)
                         self.render.render_state(
-                            self.current_match.board, game_settings.HUMAN,  # Switch turn to HUMAN
+                            self.current_match.board, game_settings.HUMAN,  # Switch turn to HUMAN1
                             State.game_over(self.current_match.board), self.current_match.moves[-1],
                             current_round, player1_score, player2_score
                         )
 
                         # Check for a win
                         if State.game_over(self.current_match.board):
-                            print("Game Over!")
                             player2_score += 1
                             current_round += 1
-                            print('The next round will start in 3 seconds')
                             
                             time.sleep(3)
                             self.render.check_winner_final(current_round, player2_score, player1_score, rounds)
 
-                            
                             self.current_match = State()
                             self.render.render_state(
                                 self.current_match.board, game_settings.FIRST_TURN_HUMAN, False,
