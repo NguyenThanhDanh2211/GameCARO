@@ -4,7 +4,7 @@
 Game CARO using Alpha-Beta and Minimax pruning, combined with MongoDB database.
 </h2>
 
-How to use this game?
+How to play this game?
 
 1. Clone code to computer
 2. Go to the GameCARO folder
