@@ -1,12 +1,17 @@
-# GameCARO
+# Game CARO 🎯
 
-<h2>
-Game CARO using Alpha-Beta and Minimax pruning, combined with MongoDB database.
-</h2>
+## About  
+This is an **Caro game**, developed using **Alpha-Beta Pruning** and **Minimax Algorithm**, combined with **MongoDB** for data storage.  
 
-How to play this game?
+## Tech Stack 🛠️  
+- **Programming Language:** Python  
+- **Game Engine:** Pygame  
+- **AI Algorithm:** Minimax with Alpha-Beta Pruning  
+- **Database:** MongoDB  
 
-1. Clone code to computer
-2. Go to the GameCARO folder
-3. Open terminal, execute command: python main.py
-   Now enjoy the game, hope u like it 🥰
+## Features 🚀  
+- **AI opponent** using Minimax & Alpha-Beta Pruning  
+- **Player vs Player & Player vs AI modes**  
+- **Game state saving using MongoDB**   
+
+📌 **More updates coming soon!**
